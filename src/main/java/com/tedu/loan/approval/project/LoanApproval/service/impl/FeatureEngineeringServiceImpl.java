@@ -186,6 +186,35 @@ public class FeatureEngineeringServiceImpl implements FeatureEngineeringService 
         } : 0;
     }
 
+    /*private void dtoToJsonWriter(CreditEvaluationDTO buildDto) {
+        String tc = String.valueOf(buildDto.getPersonTc());
+        File outputFile = Paths.get("src", "main", "resources", "features", tc, "loanId_" + buildDto.getLoanId() + ".json").toFile();
+        File parentDir = outputFile.getParentFile();
+        if (!parentDir.exists()) {
+            boolean dirsCreated = parentDir.mkdirs();
+            if (!dirsCreated) {
+                throw new RuntimeException("Unable to create directory " + parentDir.getAbsolutePath());
+            }
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(outputFile, buildDto);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
+    @Override
+    public void generateAllFeaturesJsonFiles() {
+        List<LoanApplication> allLoans = loanAppRepo.findAll();
+
+        for (LoanApplication loan : allLoans) {
+            CreditEvaluationDTO dto = generateFeatures(loan.getId());
+            dtoToJsonWriter(dto);
+        }
+    }
+
     private void dtoToJsonWriter(CreditEvaluationDTO buildDto) {
         String tc = String.valueOf(buildDto.getPersonTc());
         File outputFile = Paths.get("src", "main", "resources", "features", tc, "loanId_" + buildDto.getLoanId() + ".json").toFile();

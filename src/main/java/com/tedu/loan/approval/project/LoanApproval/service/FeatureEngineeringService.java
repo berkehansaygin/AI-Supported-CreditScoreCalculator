@@ -4,4 +4,5 @@ import com.tedu.loan.approval.project.LoanApproval.model.dto.CreditEvaluationDTO
 
 public interface FeatureEngineeringService {
     CreditEvaluationDTO generateFeatures(Long loanApplicationId);
+    void generateAllFeaturesJsonFiles();
 }
