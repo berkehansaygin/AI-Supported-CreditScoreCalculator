@@ -1,4 +1,4 @@
-# AISupported - CreditScoreCalculator  
+# AI-Supported - CreditScoreCalculator  
 **Empowering Smarter Credit Decisions Instantly**
 
 ---
@@ -16,12 +16,12 @@
 
 ## 🧠 Overview
 
-**AISupported-CreditScoreCalculator** is a developer-focused framework that facilitates building scalable, data-driven credit scoring and loan approval systems.  
+**AI-Supported-CreditScoreCalculator** is a developer-focused framework that facilitates building scalable, data-driven credit scoring and loan approval systems.  
 It integrates seamlessly with Spring Boot, offering robust data access, feature engineering, and machine learning prediction capabilities to automate and enhance lending workflows.
 
 ---
 
-## ❓ Why AISupported-CreditScoreCalculator?
+## ❓ Why AI-Supported-CreditScoreCalculator?
 
 This project empowers developers to create efficient, maintainable credit evaluation applications. Key features include:
 
