@@ -1,11 +1,14 @@
 package com.tedu.loan.approval.project.LoanApproval.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreditEvaluationDTO {
 
     private double incomeStabilityScore;
@@ -46,4 +49,9 @@ public class CreditEvaluationDTO {
 
     private int collateralCount;
     private double totalCollateralValue;
+
+    private int creditScore;
+    private int eligibleLoanAmount;
+
+
 }
