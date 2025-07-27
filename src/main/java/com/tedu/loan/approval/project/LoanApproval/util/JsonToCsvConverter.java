@@ -10,32 +10,95 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class JsonToCsvConverter {
 
     private static final String FEATURES_DIR = "src/main/resources/features";
-    private static final String OUTPUT_CSV = "src/main/resources/features/all_features.csv" ;
+    private static final String OUTPUT_CSV = "src/main/resources/features/all_features.csv";
+
+    public static int calculateCreditScore(CreditEvaluationDTO dto) {
+        double score = 1000;
+
+        score += dto.getAge() * 3;
+        score += dto.getMonthlyIncome() * 0.5;
+        score += dto.getEmploymentStatusCode() * 50;
+        score += dto.getEducationLevelCode() * 40;
+        score += dto.getMaritalStatusCode() * 20;
+        score += dto.getCollateralCount() * 80;
+        score += dto.getTotalCollateralValue() * 0.02;
+        score += dto.getOnTimeDebtCount() * 30;
+        score += dto.getOnTimeDebtAmount() * 0.01;
+
+        score -= dto.getTotalDebtCount() * 25;
+        score -= dto.getTotalDebtAmount() * 0.03;
+        score -= dto.getLateDebtCount() * 100;
+        score -= dto.getLateDebtAmount() * 0.05;
+        score -= dto.getLoanApplicationsLastYear() * 40;
+
+        score -= dto.getCurrentCardDebt() * 0.04;
+        score += dto.getCreditCardUsageDuration() * 5;
+        score += dto.getCreditCardLimit() * 0.005;
+
+        score += dto.getCreditScore() * 0.2;
+
+
+        int finalScore = (int) Math.round(score);
+        return finalScore;
+    }
+
+    public static long calculateEligibleLoanAmount(CreditEvaluationDTO dto) {
+        double amount = 50_000;
+
+
+        amount += dto.getMonthlyIncome() * 2.5;
+
+
+        amount -= dto.getTotalDebtAmount() * 0.3;
+
+
+        amount -= dto.getCurrentCardDebt() * 0.5;
+
+
+        amount += dto.getCollateralCount() * 5_000;
+        amount += dto.getTotalCollateralValue() * 0.1;
+
+
+        amount -= dto.getLoanApplicationsLastYear() * 1_000;
+        amount += dto.getOnTimeDebtCount() * 500;
+
+
+        amount += dto.getEmploymentStatusCode() * 2_000;
+        if (dto.getAge() < 30) amount -= 5_000;
+        else if (dto.getAge() > 60) amount -= 3_000;
+
+
+        amount += dto.getCreditScore() * 100;
+
+
+        long finalAmount = Math.round(amount);
+        finalAmount = Math.max(0, finalAmount);
+        finalAmount = Math.min(1_000_000, finalAmount);
+        return finalAmount;
+    }
 
     public static void convertAllJsonToCsv() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Random random = new Random();
 
         try (CSVWriter writer = new CSVWriter(new FileWriter(OUTPUT_CSV))) {
 
             String[] header = {
-                    "personTc","loanId","incomeStabilityScore","debtToIncomeRatio",
-                    "paymentDisciplineRatio","latePaymentSeverity","ageIncomeRatio",
-                    "creditExperienceRatio","avgDebtPerCount","onTimeAmountRatio",
-                    "lateDebtFrequency","monthlyPaymentCapacity","loanDurationExperience",
-                    "collateralToIncome","collateralPerMonth","creditUtilizationRatio",
-                    "age","monthlyIncome","employmentStatusCode","educationLevelCode",
-                    "maritalStatusCode","loanTypeCode","loanTerm","totalDebtCount",
-                    "totalDebtAmount","onTimeDebtCount","onTimeDebtAmount",
-                    "lateDebtCount","lateDebtAmount","loanApplicationsLastYear",
-                    "creditCardLimit","currentCardDebt","creditCardUsageDuration",
-                    "collateralCount","totalCollateralValue",
-                    "creditScore","eligibleLoanAmount","riskLevel"
+                    "personTc", "loanId", "incomeStabilityScore", "debtToIncomeRatio",
+                    "paymentDisciplineRatio", "latePaymentSeverity", "ageIncomeRatio",
+                    "creditExperienceRatio", "avgDebtPerCount", "onTimeAmountRatio",
+                    "lateDebtFrequency", "monthlyPaymentCapacity", "loanDurationExperience",
+                    "collateralToIncome", "collateralPerMonth", "creditUtilizationRatio",
+                    "age", "monthlyIncome", "employmentStatusCode", "educationLevelCode",
+                    "maritalStatusCode", "loanTypeCode", "loanTerm", "totalDebtCount",
+                    "totalDebtAmount", "onTimeDebtCount", "onTimeDebtAmount",
+                    "lateDebtCount", "lateDebtAmount", "loanApplicationsLastYear",
+                    "creditCardLimit", "currentCardDebt", "creditCardUsageDuration",
+                    "collateralCount", "totalCollateralValue",
+                    "creditScore", "eligibleLoanAmount"
             };
             writer.writeNext(header);
 
@@ -84,14 +147,12 @@ public class JsonToCsvConverter {
                             row.add(String.valueOf(dto.getCollateralCount()));
                             row.add(String.valueOf(dto.getTotalCollateralValue()));
 
-                            // Dummy credit score and loan amount
-                            int creditScore = random.nextInt(1801) + 100; // 100-1900
-                            int eligibleLoanAmount = (int) (dto.getMonthlyIncome() * (4 + random.nextDouble() * 6)); // 4x–10x
-                            String riskLevel = calculateRiskLevel(creditScore, eligibleLoanAmount);
+                            int creditScore = calculateCreditScore(dto);
+                            double eligibleLoanAmount = calculateEligibleLoanAmount(dto);
+
 
                             row.add(String.valueOf(creditScore));
                             row.add(String.valueOf(eligibleLoanAmount));
-                            row.add(riskLevel);
 
                             writer.writeNext(row.toArray(new String[0]));
                         }
@@ -100,16 +161,9 @@ public class JsonToCsvConverter {
             }
         }
     }
-    private static String calculateRiskLevel(int creditScore, int eligibleLoanAmount) {
-        if (creditScore >= 1600 && eligibleLoanAmount >= 80000) {
-            return "LOW";
-        } else if (creditScore >= 1000) {
-            return "MEDIUM";
-        } else {
-            return "HIGH";
-        }
-    }
+
     public static void main(String[] args) throws IOException {
         convertAllJsonToCsv();
+
     }
 }
