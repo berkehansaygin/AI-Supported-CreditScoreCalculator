@@ -13,7 +13,6 @@ import com.tedu.loan.approval.project.LoanApproval.model.dto.CreditEvaluationDTO
 import com.tedu.loan.approval.project.LoanApproval.repository.CollateralRepository;
 import com.tedu.loan.approval.project.LoanApproval.repository.CreditHistorySummaryRepository;
 import com.tedu.loan.approval.project.LoanApproval.repository.LoanApplicationRepository;
-import com.tedu.loan.approval.project.LoanApproval.repository.PersonRepository;
 import com.tedu.loan.approval.project.LoanApproval.service.FeatureEngineeringService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ import java.util.List;
 public class FeatureEngineeringServiceImpl implements FeatureEngineeringService {
 
     private final LoanApplicationRepository loanAppRepo;
-    private final PersonRepository personRepo;
     private final CreditHistorySummaryRepository creditHistoryRepo;
     private final CollateralRepository collateralRepo;
 
@@ -185,25 +183,6 @@ public class FeatureEngineeringServiceImpl implements FeatureEngineeringService 
             case BUSINESS -> 5;
         } : 0;
     }
-
-    /*private void dtoToJsonWriter(CreditEvaluationDTO buildDto) {
-        String tc = String.valueOf(buildDto.getPersonTc());
-        File outputFile = Paths.get("src", "main", "resources", "features", tc, "loanId_" + buildDto.getLoanId() + ".json").toFile();
-        File parentDir = outputFile.getParentFile();
-        if (!parentDir.exists()) {
-            boolean dirsCreated = parentDir.mkdirs();
-            if (!dirsCreated) {
-                throw new RuntimeException("Unable to create directory " + parentDir.getAbsolutePath());
-            }
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(outputFile, buildDto);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 
     @Override
     public void generateAllFeaturesJsonFiles() {

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/credithistsummary")
 @RequiredArgsConstructor
-
-
 public class CreditHistorySummaryController {
     private final CreditHistorySummaryService creditHistorySummaryService;
 
